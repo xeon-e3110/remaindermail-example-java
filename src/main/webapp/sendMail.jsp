@@ -5,19 +5,19 @@
 <html>
 <body>
 
-<s:iterator value="errorList">
+<s:iterator value="sendMail.errorList">
 <p><s:property/></p>
 </s:iterator>
 
-<s:if test="%{isSend}">
+<s:if test="%{sendMail.isSend}">
 メールを送信しました
 </s:if>
 
 <h2>sendMail</h2>
 
 <s:form action="sendMail">
-	<s:textfield name="title" label="タイトル"></s:textfield>
-	<s:textfield name="message" label="本文"></s:textfield>
+	<s:textfield name="sendMail.title" label="タイトル"></s:textfield>
+	<s:textfield name="sendMail.message" label="本文"></s:textfield>
 	<s:submit value="送信"></s:submit>
 </s:form>
 

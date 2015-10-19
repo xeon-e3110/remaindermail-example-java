@@ -5,18 +5,18 @@
 <html>
 <body>
 
-<s:iterator value="errorList">
+<s:iterator value="registMailAddress.errorList">
 <p><s:property/></p>
 </s:iterator>
 
-<s:if test="%{isRegist}">
+<s:if test="%{registMailAddress.isRegist}">
 メールアドレスを登録しました
 </s:if>
 
 <h2>registMailAddress</h2>
 <s:form action="registMailAddress">
-	<s:textfield name='mailAddress' label="メールアドレス"></s:textfield>
-	<s:textfield name='confirmMailAddress' label="確認用メールアドレス"></s:textfield>
+	<s:textfield name='registMailAddress.mailAddress' label="メールアドレス"></s:textfield>
+	<s:textfield name='registMailAddress.confirmMailAddress' label="確認用メールアドレス"></s:textfield>
 	<s:submit value="送信"></s:submit>
 </s:form>
 
