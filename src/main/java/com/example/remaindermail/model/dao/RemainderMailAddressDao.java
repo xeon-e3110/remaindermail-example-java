@@ -6,7 +6,9 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
 
+import com.example.remaindermail.model.Log;
 import com.example.remaindermail.model.bean.RemainderMailAddressBean;
 import com.mysql.jdbc.Connection;
 
@@ -35,37 +37,50 @@ public class RemainderMailAddressDao extends Dao
 	/**
 	 * メールアドレスの登録チェック
 	 * @param address
-	 * @return boolean (true:登録済み false:未登録)
-	 * @throws SQLException
+	 * @return メールアドレスが登録されているかどうか (true:登録済み false:未登録)
 	 */
-	public boolean isRegistedAddress(String address) throws Exception
+	public boolean isRegistedAddress(String address)
 	{
-		String sql = "SELECT `mailAddress` FROM `?` WHERE `mailAddress` = '?'";
-		String[] params = {tableName, address};
+		String sql = "SELECT `mailAddress` FROM `" + tableName + "` WHERE `mailAddress` = ? AND `deleteFlg` = 0";
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		boolean exists = false;
 		try
 		{
-			stmt = connection.prepareStatement(sql, params);
+			stmt = connection.prepareStatement(sql);
+			stmt.setString(1, address);
 			rs = stmt.executeQuery();
 			exists = rs.next();
 			rs.close();
 			stmt.close();
 		}
-		catch(SQLException e)
+		catch(Exception e)
 		{
-			throw e;
+			Log.put(Level.SEVERE, e);
 		}
 		finally 
 		{
 			if(rs != null)
 			{
-				rs.close();
+				try 
+				{
+					rs.close();
+				} 
+				catch (SQLException e) 
+				{
+					Log.put(Level.SEVERE, e);
+				}
 			}
 			if(stmt != null)
 			{
-				stmt.close();
+				try 
+				{
+					stmt.close();
+				} 
+				catch (SQLException e) 
+				{
+					Log.put(Level.SEVERE, e);
+				}
 			}
 		}
 		
@@ -75,37 +90,46 @@ public class RemainderMailAddressDao extends Dao
 	/**
 	 * メールアドレス登録
 	 * @param address
-	 * @return boolean (true:登録成功 false:登録失敗)
-	 * @throws SQLException
+	 * @return 登録が成功したかどうか (true:登録成功 false:登録失敗)
 	 */
-	public boolean registAddress(String address) throws Exception
+	public boolean registAddress(String address)
 	{
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String dateStr = sdf.format(date);
-		String[] params = {tableName, address, dateStr, dateStr, "0"};
-		String sql = "INSERT INTO `?` ("
-				+ "`mailAddress`, `updateTime`, `createTime`, `deleteFlg`"
+		String sql = "INSERT INTO `" + tableName + "` ("
+				+ "`mailAddress`, `updateDate`, `createDate`, `deleteFlg`"
 				+ ") VALUES ("
-				+ "'?', '?', '?', ?"
+				+ "?, ?, ?, ?"
 				+ ")";
 		PreparedStatement stmt = null;
 		boolean success = false;
 		try
 		{
-			stmt = connection.prepareStatement(sql, params);
+			stmt = connection.prepareStatement(sql);
+			stmt.setString(1, address);
+			stmt.setString(2, dateStr);
+			stmt.setString(3, dateStr);
+			stmt.setString(4, "0");
 			stmt.execute();
 			success = true;
 		}
-		catch(SQLException e)
+		catch(Exception e)
 		{
-			// TODO ロガーに出力する
+			Log.put(Level.SEVERE, e);
 		}
 		finally
 		{
 			if(stmt != null)
 			{
-				stmt.close();
+				try 
+				{
+					stmt.close();
+				} 
+				catch (SQLException e) 
+				{
+					Log.put(Level.SEVERE, e);
+				}
 			}
 		}
 		return success;
@@ -113,27 +137,22 @@ public class RemainderMailAddressDao extends Dao
 	
 	/**
 	 * 登録されているリマインダーメールリストを取得する
-	 * @return ArrayList<RemainderMailAddressBean> 登録されているメールアドレスのリスト
+	 * @return 登録されているメールアドレスのリスト
 	 * @throws Exception
 	 */
 	public ArrayList<RemainderMailAddressBean> getAddressList() throws Exception
 	{
 		ArrayList<RemainderMailAddressBean> list = new ArrayList<RemainderMailAddressBean>();
-		String[] params = {tableName};
 		String sql = "SELECT "
-				+ "`id`,"
-				+ "`mailAddress`,"
-				+ "`updateTime`,"
-				+ "`createTime`,"
-				+ "`deleteFlg`"
-				+ " FROM `?` WHERE `delete` = 0";
+				+ "`id`, `mailAddress`, `updateDate`, `createDate`, `deleteFlg`"
+				+ " FROM " + tableName + " WHERE `deleteFlg` = 0";
 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
 		try
 		{
-			stmt = connection.prepareStatement(sql, params);
+			stmt = connection.prepareStatement(sql);
 			rs = stmt.executeQuery();
 			while(rs.next())
 			{

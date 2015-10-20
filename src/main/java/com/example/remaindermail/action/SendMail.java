@@ -3,15 +3,10 @@ package com.example.remaindermail.action;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Properties;
+import java.util.logging.Level;
 
-import javax.mail.Message;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
+import com.example.remaindermail.model.Log;
+import com.example.remaindermail.model.Mail;
 import com.example.remaindermail.model.bean.RemainderMailAddressBean;
 import com.example.remaindermail.model.bean.RemainderMailMessageBean;
 import com.example.remaindermail.model.bean.SendMailBean;
@@ -32,11 +27,6 @@ public class SendMail extends ActionSupport {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	protected static final String smtpHostName = "";
-	protected static final int smtpPort = 587;
-	protected static final String smtpUser = "";
-	protected static final String smtpPassword = "";
 	
 	/**
 	 * リマインダーメールメッセージ
@@ -89,21 +79,22 @@ public class SendMail extends ActionSupport {
 		}
 		
 		MysqlConnection mysqlConnection = null;
+		Connection connection = null;
 		
 		try
 		{
 			
 			// Mysqlコネクションを開く
 			mysqlConnection = new MysqlConnection();
-			Connection connection = mysqlConnection.openConnection();
+			connection = mysqlConnection.openConnection();
 			
 			//送信先をまとめる
 			RemainderMailAddressDao addressDao = new RemainderMailAddressDao(connection);
 			ArrayList<RemainderMailAddressBean> addressList = addressDao.getAddressList();
-			ArrayList<InternetAddress> inetAddressList = new ArrayList<InternetAddress>();
+			ArrayList<String> inetAddressList = new ArrayList<String>();
 			for(RemainderMailAddressBean bean:addressList)
 			{
-				inetAddressList.add(new InternetAddress(bean.getMailAddress()));
+				inetAddressList.add(bean.getMailAddress());
 			}
 			
 			if(inetAddressList.isEmpty())
@@ -112,55 +103,48 @@ public class SendMail extends ActionSupport {
 				return ERROR;
 			}
 			
-			//履歴に登録
-			Date date = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			RemainderMailMessageBean bean = new RemainderMailMessageBean();
-			bean.setTitle(sendMail.getTitle());
-			bean.setMessage(sendMail.getMessage());
-			bean.setCreateDate(sdf.format(date));
-			bean.setSend(1);
+			// メール送信
+			Mail mail = new Mail();
+			boolean send = mail.send(inetAddressList, sendMail.getTitle(), sendMail.getMessage());
 			
-			RemainderMailMessageDao messageDao = new RemainderMailMessageDao(connection);
-			messageDao.registMessage(bean);
+			if(send)
+			{
+				//履歴に登録
+				Date date = new Date();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+				RemainderMailMessageBean bean = new RemainderMailMessageBean();
+				bean.setTitle(sendMail.getTitle());
+				bean.setMessage(sendMail.getMessage());
+				bean.setCreateDate(sdf.format(date));
+				bean.setSend(1);
+				
+				RemainderMailMessageDao messageDao = new RemainderMailMessageDao(connection);
+				messageDao.registMessage(bean);
+				
+				// 送信済み状態にする
+				sendMail.setSend(true);
+				
+				// 入力をクリア
+				sendMail.setTitle("");
+				sendMail.setMessage("");
+
+				// DBコミット
+				connection.commit();
+			}
+			else
+			{
+				sendMail.getErrorList().add("メールは送信されませんでした");
+				return ERROR;
+			}
 			
-		
-			//SMTPを使用してメールを送信
-			Properties prop = new Properties();
-			prop.put("mail.smtp.host", smtpHostName);
-			prop.put("mail.smtp.auth", "true");
-			prop.put("mail.smtp.port", smtpPort);
-			prop.put("mail.transport.protocol", "smtp");
-			prop.put("mail.smtp.debug", "true");
-			
-			Session session = Session.getInstance(prop, new javax.mail.Authenticator(){
-				protected PasswordAuthentication getPasswordAuthentication()
-				{
-					return new PasswordAuthentication(smtpUser, smtpPassword);
-				}
-			});
-			
-			MimeMessage msg = new MimeMessage(session);
-			InternetAddress fromAddress = new InternetAddress(smtpUser + "@" + smtpPassword);
-			
-			msg.setFrom(fromAddress);
-			msg.setRecipients(Message.RecipientType.TO,
-					inetAddressList.toArray(new InternetAddress[0])
-					);
-			msg.setSubject(sendMail.getTitle(), "ISO-2022-JP");
-			msg.setText(sendMail.getMessage(), "ISO-2022-JP");
-			Transport.send(msg);
-			sendMail.setSend(true);
-			
-			//入力をクリア
-			sendMail.setTitle("");
-			sendMail.setMessage("");
-			
-			connection.commit();
 		}
 		catch(Exception e)
 		{
-			// TODO Log
+			Log.put(Level.SEVERE, e);
+			if(connection != null)
+			{
+				connection.rollback();	
+			}
 		}
 		finally
 		{

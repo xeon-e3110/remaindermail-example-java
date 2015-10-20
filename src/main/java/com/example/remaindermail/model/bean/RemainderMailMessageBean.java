@@ -25,7 +25,7 @@ public class RemainderMailMessageBean
 	private String message;
 	
 	/**
-	 * 登録日("yyyy-MM-dd hh:mm:ss":形式の文字列)
+	 * 登録日 ("yyyy-MM-dd hh:mm:ss":形式の文字列)
 	 */
 	private String createDate;
 	
@@ -89,7 +89,7 @@ public class RemainderMailMessageBean
 	}
 	
 	/**
-	 * 作成日取得("yyyy-MM-dd hh:mm:ss":形式の文字列)
+	 * 作成日取得 ("yyyy-MM-dd hh:mm:ss":形式の文字列)
 	 * @return createDate
 	 */
 	public String getCreateDate()
@@ -98,7 +98,7 @@ public class RemainderMailMessageBean
 	}
 
 	/**
-	 * 作成日設定("yyyy-MM-dd hh:mm:ss":形式の文字列)
+	 * 作成日設定 ("yyyy-MM-dd hh:mm:ss":形式の文字列)
 	 * @param createDate 作成日
 	 */
 	public void setCreateDate(String createDate)
@@ -107,7 +107,7 @@ public class RemainderMailMessageBean
 	}
 	
 	/**
-	 * 送信フラグ取得(0:未送信 1:送信済み)
+	 * 送信フラグ取得 (0:未送信 1:送信済み)
 	 * @return send
 	 */
 	public int getSend()
@@ -116,7 +116,7 @@ public class RemainderMailMessageBean
 	}
 
 	/**
-	 * 送信フラグ設定(0:未送信 1:送信済み)
+	 * 送信フラグ設定 (0:未送信 1:送信済み)
 	 * @param send　
 	 */
 	public void setSend(int send)

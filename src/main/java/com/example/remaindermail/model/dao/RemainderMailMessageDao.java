@@ -4,7 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
+import com.example.remaindermail.model.Log;
 import com.example.remaindermail.model.bean.RemainderMailMessageBean;
 import com.mysql.jdbc.Connection;
 
@@ -13,7 +15,8 @@ import com.mysql.jdbc.Connection;
  * @author toshikiarai
  * @version 1.0.0
  */
-public class RemainderMailMessageDao extends Dao {
+public class RemainderMailMessageDao extends Dao 
+{
 	
 	/**
 	 * テーブル名
@@ -32,57 +35,62 @@ public class RemainderMailMessageDao extends Dao {
 	/**
 	 * メッセージを登録
 	 * @param message
-	 * @return
-	 * @throws ClassNotFoundException
-	 * @throws SQLException
+	 * @return メッセージ登録が成功したかどうか (true:成功 false:失敗)
 	 */
-	public boolean registMessage(RemainderMailMessageBean message) throws ClassNotFoundException, SQLException
+	public boolean registMessage(RemainderMailMessageBean message)
 	{
-		String[] params = {tableName, message.getTitle(), message.getMessage(), "1", message.getCreateDate()};
-		String sql = "INSERT INTO `?` ("
-				+ "id, title, message, send, createTime"
+		String sql = "INSERT INTO `" + tableName + "` ("
+				+ "id, title, message, send, createDate"
 				+ ") VALUES ("
-				+ "null, '?', '?', ?, '?'"
+				+ "null, ?, ?, ?, ?"
 				+ ")";
 		
 		PreparedStatement stmt = null;
 		boolean success = false;
 		try
 		{
-			stmt = connection.prepareStatement(sql, params);
+			stmt = connection.prepareStatement(sql);
+			stmt.setString(1, message.getTitle());
+			stmt.setString(2, message.getMessage());
+			stmt.setInt(3, message.getSend());
+			stmt.setString(4, message.getCreateDate());
 			stmt.execute();
 			success = false;
 		}
 		catch(SQLException e)
 		{
-			// TODO Log
+			Log.put(Level.SEVERE, e);
 		}
 		finally
 		{
 			if(stmt != null)
 			{
-				stmt.close();
+				try 
+				{
+					stmt.close();
+				} 
+				catch (SQLException e) 
+				{
+					Log.put(Level.SEVERE, e);
+				}
 			}
 		}
 		return success;
 	}
 	
 	/**
-	 * 登録メッセージ一覧得する
-	 * @return
-	 * @throws ClassNotFoundException
-	 * @throws SQLException
+	 * 登録メッセージ一覧を取得得する
+	 * @return メッセージリスト
 	 */
-	public ArrayList<RemainderMailMessageBean> getMessageList() throws ClassNotFoundException, SQLException
+	public ArrayList<RemainderMailMessageBean> getMessageList()
 	{
 		ArrayList<RemainderMailMessageBean> list = new ArrayList<RemainderMailMessageBean>();
-		String[] params = {tableName};
-		String sql = "SELECT mailAddress FROM `?`";
+		String sql = "SELECT mailAddress FROM `" + tableName + "`";
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try
 		{
-			stmt = connection.prepareStatement(sql, params);
+			stmt = connection.prepareStatement(sql);
 			rs = stmt.executeQuery();
 			while(rs.next())
 			{
@@ -97,17 +105,31 @@ public class RemainderMailMessageDao extends Dao {
 		}
 		catch(SQLException e)
 		{
-			// TODO Log
+			Log.put(Level.SEVERE, e);
 		}
 		finally
 		{
 			if(rs != null)
 			{
-				rs.close();
+				try 
+				{
+					rs.close();
+				} 
+				catch (SQLException e) 
+				{
+					Log.put(Level.SEVERE, e);
+				}
 			}
 			if(stmt != null)
 			{
-				stmt.close();
+				try 
+				{
+					stmt.close();
+				} 
+				catch (SQLException e) 
+				{
+					Log.put(Level.SEVERE, e);
+				}
 			}
 		}
 		return list;

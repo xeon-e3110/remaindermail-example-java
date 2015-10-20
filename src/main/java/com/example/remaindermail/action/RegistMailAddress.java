@@ -1,9 +1,10 @@
 package com.example.remaindermail.action;
 
-import java.sql.SQLException;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.example.remaindermail.model.Log;
 import com.example.remaindermail.model.bean.RegistMailAddressBean;
 import com.example.remaindermail.model.dao.MysqlConnection;
 import com.example.remaindermail.model.dao.RemainderMailAddressDao;
@@ -54,17 +55,18 @@ public class RegistMailAddress extends ActionSupport {
 	public String regist() throws Exception
 	{
 		MysqlConnection mysqlConnection = null;
+		Connection connection = null;
 		
 		try
 		{
 
-			//初回アクセス時はそのまま表示する
+			// 初回アクセス時はそのまま表示する
 			if(registMailAddress == null)
 			{
 				return SUCCESS;
 			}
 			
-			//メールアドレス判別
+			// メールアドレス判別
 			String regex = "^[a-zA-Z0-9_]+"
 					+ "[a-zA-Z0-9.-_]*"
 					+ "@"
@@ -74,7 +76,7 @@ public class RegistMailAddress extends ActionSupport {
 			Pattern mailAddressPattern = Pattern.compile(regex);
 			Matcher matcher = mailAddressPattern.matcher(registMailAddress.getMailAddress());
 			
-			//無効なメールアドレス
+			// 無効なメールアドレス
 			if(matcher.matches() == false)
 			{
 				registMailAddress.getErrorList().add("無効なメールアドレスです");
@@ -82,8 +84,8 @@ public class RegistMailAddress extends ActionSupport {
 				return ERROR;
 			}
 			
-			//入力確認
-			if(registMailAddress.equals(registMailAddress.getConfirmMailAddress()) == false)
+			// 入力確認
+			if(registMailAddress.getMailAddress().equals(registMailAddress.getConfirmMailAddress()) == false)
 			{
 				registMailAddress.getErrorList().add("確認用メールアドレスが違います");
 				registMailAddress.setRegist(false);
@@ -92,9 +94,9 @@ public class RegistMailAddress extends ActionSupport {
 			
 			// DBコネクション
 			mysqlConnection = new MysqlConnection();
-			Connection connection = mysqlConnection.openConnection();
+			connection = mysqlConnection.openConnection();
 			
-			//すでに登録されている場合
+			// すでに登録されている場合
 			RemainderMailAddressDao dao = new RemainderMailAddressDao(connection);
 			if(dao.isRegistedAddress(registMailAddress.getMailAddress()))
 			{
@@ -103,7 +105,7 @@ public class RegistMailAddress extends ActionSupport {
 				return ERROR;
 			}
 			
-			//メールアドレス登録
+			// メールアドレス登録
 			if(dao.registAddress(registMailAddress.getMailAddress()) == false)
 			{
 				registMailAddress.getErrorList().add("登録に失敗しました");
@@ -116,21 +118,21 @@ public class RegistMailAddress extends ActionSupport {
 			// DBコミット
 			connection.commit();
 			
-			// コネクションをクローズ
-			mysqlConnection.closeConnection();
-		}
-		catch(SQLException e)
-		{
-			// TODO ログ
 		}
 		catch(Exception e)
 		{
-			// TODO ログ
+			Log.put(Level.SEVERE, e);
+			if(connection != null)
+			{
+				// DBロールバック
+				connection.rollback();
+			}
 		}
 		finally
 		{
 			if(mysqlConnection != null)
 			{
+				// コネクションをクローズ
 				mysqlConnection.closeConnection();
 			}
 		}

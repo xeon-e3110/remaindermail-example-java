@@ -45,7 +45,8 @@ public class SendMailBean extends ViewBeanBase
 	 * 本文取得
 	 * @return message
 	 */
-	public String getMessage() {
+	public String getMessage() 
+	{
 		return message;
 	}
 
