@@ -63,7 +63,7 @@ public class RegistMailAddressBean extends ViewBeanBase
 	 * 登録フラグ取得
 	 * @return isRegist
 	 */
-	public boolean isRegist() 
+	public boolean getIsRegist() 
 	{
 		return isRegist;
 	}
@@ -72,7 +72,7 @@ public class RegistMailAddressBean extends ViewBeanBase
 	 * 登録フラグセット
 	 * @param isRegist
 	 */
-	public void setRegist(boolean isRegist) 
+	public void setIsRegist(boolean isRegist) 
 	{
 		this.isRegist = isRegist;
 	}

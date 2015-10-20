@@ -1,5 +1,6 @@
 package com.example.remaindermail.model.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +11,6 @@ import java.util.logging.Level;
 
 import com.example.remaindermail.model.Log;
 import com.example.remaindermail.model.bean.RemainderMailAddressBean;
-import com.mysql.jdbc.Connection;
 
 /**
  * リマインダーメールアドレステーブルアクセス

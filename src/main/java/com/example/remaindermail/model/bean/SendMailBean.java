@@ -63,7 +63,7 @@ public class SendMailBean extends ViewBeanBase
 	 * 登録フラグ取得
 	 * @return isSend
 	 */
-	public boolean isSend() 
+	public boolean getIsSend() 
 	{
 		return isSend;
 	}
@@ -72,7 +72,7 @@ public class SendMailBean extends ViewBeanBase
 	 * 登録フラグ設定
 	 * @param isSend
 	 */
-	public void setSend(boolean isSend) 
+	public void setIsSend(boolean isSend) 
 	{
 		this.isSend = isSend;
 	}

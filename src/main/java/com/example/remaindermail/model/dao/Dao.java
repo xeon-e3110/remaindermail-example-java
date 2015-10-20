@@ -1,7 +1,6 @@
 package com.example.remaindermail.model.dao;
 
-import com.mysql.jdbc.Connection;
-
+import java.sql.Connection;
 
 /**
  * MysqlDAO

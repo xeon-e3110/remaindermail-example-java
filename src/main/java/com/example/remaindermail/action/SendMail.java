@@ -1,5 +1,6 @@
 package com.example.remaindermail.action;
 
+import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,13 +8,12 @@ import java.util.logging.Level;
 
 import com.example.remaindermail.model.Log;
 import com.example.remaindermail.model.Mail;
+import com.example.remaindermail.model.MysqlConnection;
 import com.example.remaindermail.model.bean.RemainderMailAddressBean;
 import com.example.remaindermail.model.bean.RemainderMailMessageBean;
 import com.example.remaindermail.model.bean.SendMailBean;
-import com.example.remaindermail.model.dao.MysqlConnection;
 import com.example.remaindermail.model.dao.RemainderMailAddressDao;
 import com.example.remaindermail.model.dao.RemainderMailMessageDao;
-import com.mysql.jdbc.Connection;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -22,11 +22,6 @@ import com.opensymphony.xwork2.ActionSupport;
  * @version 1.0.0
  */
 public class SendMail extends ActionSupport {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * リマインダーメールメッセージ
@@ -122,7 +117,7 @@ public class SendMail extends ActionSupport {
 				messageDao.registMessage(bean);
 				
 				// 送信済み状態にする
-				sendMail.setSend(true);
+				sendMail.setIsSend(true);
 				
 				// 入力をクリア
 				sendMail.setTitle("");

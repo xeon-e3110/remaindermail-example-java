@@ -1,14 +1,14 @@
 package com.example.remaindermail.action;
 
+import java.sql.Connection;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.example.remaindermail.model.Log;
+import com.example.remaindermail.model.MysqlConnection;
 import com.example.remaindermail.model.bean.RegistMailAddressBean;
-import com.example.remaindermail.model.dao.MysqlConnection;
 import com.example.remaindermail.model.dao.RemainderMailAddressDao;
-import com.mysql.jdbc.Connection;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -17,12 +17,6 @@ import com.opensymphony.xwork2.ActionSupport;
  * @version 1.0.0
  */
 public class RegistMailAddress extends ActionSupport {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
 	
 	/**
 	 * ビューデータ
@@ -80,7 +74,7 @@ public class RegistMailAddress extends ActionSupport {
 			if(matcher.matches() == false)
 			{
 				registMailAddress.getErrorList().add("無効なメールアドレスです");
-				registMailAddress.setRegist(false);
+				registMailAddress.setIsRegist(false);
 				return ERROR;
 			}
 			
@@ -88,7 +82,7 @@ public class RegistMailAddress extends ActionSupport {
 			if(registMailAddress.getMailAddress().equals(registMailAddress.getConfirmMailAddress()) == false)
 			{
 				registMailAddress.getErrorList().add("確認用メールアドレスが違います");
-				registMailAddress.setRegist(false);
+				registMailAddress.setIsRegist(false);
 				return ERROR;
 			}
 			
@@ -101,7 +95,7 @@ public class RegistMailAddress extends ActionSupport {
 			if(dao.isRegistedAddress(registMailAddress.getMailAddress()))
 			{
 				registMailAddress.getErrorList().add("すでに登録されています");
-				registMailAddress.setRegist(false);
+				registMailAddress.setIsRegist(false);
 				return ERROR;
 			}
 			
@@ -109,11 +103,11 @@ public class RegistMailAddress extends ActionSupport {
 			if(dao.registAddress(registMailAddress.getMailAddress()) == false)
 			{
 				registMailAddress.getErrorList().add("登録に失敗しました");
-				registMailAddress.setRegist(false);
+				registMailAddress.setIsRegist(false);
 				return ERROR;
 			}
 
-			registMailAddress.setRegist(true);
+			registMailAddress.setIsRegist(true);
 			
 			// DBコミット
 			connection.commit();
