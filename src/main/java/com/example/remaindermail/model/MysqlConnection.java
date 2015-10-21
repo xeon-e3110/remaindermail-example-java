@@ -18,12 +18,13 @@ public class MysqlConnection {
 	/**
 	 * JDNI検索文字列
 	 */
-	protected String jdniLookupName = "java:comp/env/jdni/mysql/remaindermail";
+	protected String jndiLookupName = "jndi/mysql/remaindermail";
 	
 	/**
 	 * MySQLコネクション
 	 */
 	private Connection connection;
+	
 	
 	/**
 	 * コネクションを取得または生成する
@@ -33,15 +34,12 @@ public class MysqlConnection {
 	public Connection openConnection() throws SQLException
 	{
 		if(connection == null)
-		{
-			InitialContext iniCtx = null;
-			DataSource ds = null;
+		{	
 			try {
-				iniCtx = new InitialContext();
-				ds = (DataSource) iniCtx.lookup(jdniLookupName);
-				connection = ds.getConnection();
+				DataSource dataSource = JNDI.lookup(jndiLookupName);
+				connection = dataSource.getConnection();
 				connection.setAutoCommit(false);
-			} catch (NamingException e) {
+			} catch (Exception e) {
 				Log.put(Level.SEVERE, e);
 			}
 		}

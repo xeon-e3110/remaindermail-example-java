@@ -136,6 +136,7 @@ public class SendMail extends ActionSupport {
 		catch(Exception e)
 		{
 			Log.put(Level.SEVERE, e);
+			sendMail.getErrorList().add("エラーが発生しました");
 			if(connection != null)
 			{
 				connection.rollback();	

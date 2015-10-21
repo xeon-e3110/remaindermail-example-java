@@ -53,7 +53,6 @@ public class RegistMailAddress extends ActionSupport {
 		
 		try
 		{
-
 			// 初回アクセス時はそのまま表示する
 			if(registMailAddress == null)
 			{
@@ -116,6 +115,7 @@ public class RegistMailAddress extends ActionSupport {
 		catch(Exception e)
 		{
 			Log.put(Level.SEVERE, e);
+			registMailAddress.getErrorList().add("エラーが発生しました");
 			if(connection != null)
 			{
 				// DBロールバック

@@ -1,12 +1,10 @@
 package com.example.remaindermail.model;
 
 import java.util.List;
-import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
 
 import javax.mail.Message;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -21,44 +19,14 @@ public class Mail
 {
 	
 	/**
-	 * SMTP送信先
+	 * 検索用文字列
 	 */
-	private String smtpHostName = "aradius.net";
+	private static final String jndiLookupName = "jndi/mail/session";
 	
 	/**
-	 * SMTPポート
+	 * メール送信元アドレス
 	 */
-	private int smtpPort = 587;
-	
-	/**
-	 * SMTP認証ユーザー
-	 */
-	private String smtpUser = "sample2";
-	
-	/**
-	 * SMTP認証パスワード
-	 */
-	private String smtpPassword = "sample2";
-	
-	/**
-	 * SMTP設定
-	 */
-	private Properties smtpProperties;
-	
-	/**
-	 * コンストラクタ
-	 * プロパティの読み込みと設定を行う
-	 */
-	public Mail()
-	{
-		// TODO load config
-		smtpProperties = new Properties();
-		smtpProperties.put("mail.smtp.host", smtpHostName);
-		smtpProperties.put("mail.smtp.auth", "true");
-		smtpProperties.put("mail.smtp.port", smtpPort);
-		smtpProperties.put("mail.transport.protocol", "smtp");
-		smtpProperties.put("mail.smtp.debug", "true");
-	}
+	private static final String jndiLookupFrom = "jndi/mail/from";
 	
 	/**
 	 * メール送信処理
@@ -77,16 +45,11 @@ public class Mail
 				return true;
 			}
 			
-			//SMTPを使用してメールを送信
-			Session session = Session.getInstance(smtpProperties, new javax.mail.Authenticator(){
-				protected PasswordAuthentication getPasswordAuthentication()
-				{
-					return new PasswordAuthentication(smtpUser, smtpPassword);
-				}
-			});
+			Session session = JNDI.lookup(jndiLookupName);
 			
 			MimeMessage msg = new MimeMessage(session);
-			InternetAddress fromAddress = new InternetAddress(smtpUser + "@" + smtpHostName);
+			String from = JNDI.lookup(jndiLookupFrom);
+			InternetAddress fromAddress = new InternetAddress(from);
 			
 			Vector<InternetAddress> toAddressList = new Vector<InternetAddress>();
 			for(String address:addressList)
