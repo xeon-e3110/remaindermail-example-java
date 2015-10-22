@@ -5,8 +5,7 @@ package com.example.remaindermail.model.bean;
  * @author toshikiarai
  * @version 1.0.0
  */
-public class RegistMailAddressBean extends ViewBeanBase
-{
+public class RegistMailAddressBean extends ViewBeanBase {
 	
 	/**
 	 * メールアドレス
@@ -25,55 +24,49 @@ public class RegistMailAddressBean extends ViewBeanBase
 
 	/**
 	 * メールアドレス取得
-	 * @return mailAddress
+	 * @return mailAddress メールアドレス
 	 */
-	public String getMailAddress() 
-	{
+	public String getMailAddress() {
 		return mailAddress;
 	}
 
 	/**
 	 * メールアドレス設定
-	 * @param mailAddress
+	 * @param mailAddress メールアドレス
 	 */
-	public void setMailAddress(String mailAddress) 
-	{
+	public void setMailAddress(String mailAddress) {
 		this.mailAddress = mailAddress;
 	}
 
 	/**
 	 * 確認用メールアドレス取得
-	 * @return confirmMailAddress
+	 * @return confirmMailAddress 確認用メールアドレス
 	 */
-	public String getConfirmMailAddress() 
-	{
+	public String getConfirmMailAddress() {
 		return confirmMailAddress;
 	}
 
 	/**
 	 * 確認用メールアドレス設定
-	 * @param confirmMailAddress
+	 * @param confirmMailAddress 確認用メールアドレス
 	 */
-	public void setConfirmMailAddress(String confirmMailAddress) 
-	{
+	public void setConfirmMailAddress(String confirmMailAddress) {
 		this.confirmMailAddress = confirmMailAddress;
 	}
 
 	/**
 	 * 登録フラグ取得
-	 * @return isRegist
+	 * @return isRegist 登録したフラグ
 	 */
-	public boolean getIsRegist() 
-	{
+	public boolean getIsRegist() {
 		return isRegist;
 	}
 
 	/**
 	 * 登録フラグセット
-	 * @param isRegist
+	 * @param isRegist 登録したフラグ
 	 */
-	public void setIsRegist(boolean isRegist) 
-	{
+	public void setIsRegist(boolean isRegist) {
 		this.isRegist = isRegist;
 	}
 	

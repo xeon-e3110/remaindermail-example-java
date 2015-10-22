@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import com.example.remaindermail.model.Log;
+import com.example.remaindermail.model.LogWrapper;
 import com.example.remaindermail.model.bean.RemainderMailMessageBean;
 
 /**
@@ -15,8 +15,7 @@ import com.example.remaindermail.model.bean.RemainderMailMessageBean;
  * @author toshikiarai
  * @version 1.0.0
  */
-public class RemainderMailMessageDao extends Dao 
-{
+public class RemainderMailMessageDao extends Dao {
 	
 	/**
 	 * テーブル名
@@ -25,10 +24,9 @@ public class RemainderMailMessageDao extends Dao
 
 	/**
 	 * コンストラクタ
-	 * @param connection
+	 * @param connection コネクション
 	 */
-	public RemainderMailMessageDao(Connection connection) 
-	{
+	public RemainderMailMessageDao(Connection connection) {
 		super(connection);
 	}
 	
@@ -36,9 +34,9 @@ public class RemainderMailMessageDao extends Dao
 	 * メッセージを登録
 	 * @param message
 	 * @return メッセージ登録が成功したかどうか (true:成功 false:失敗)
+	 * @throws Exception
 	 */
-	public boolean registMessage(RemainderMailMessageBean message)
-	{
+	public boolean registMessage(RemainderMailMessageBean message) throws Exception {
 		String sql = "INSERT INTO `" + tableName + "` ("
 				+ "id, title, message, send, createDate"
 				+ ") VALUES ("
@@ -47,8 +45,7 @@ public class RemainderMailMessageDao extends Dao
 		
 		PreparedStatement stmt = null;
 		boolean success = false;
-		try
-		{
+		try {
 			stmt = connection.prepareStatement(sql);
 			stmt.setString(1, message.getTitle());
 			stmt.setString(2, message.getMessage());
@@ -56,23 +53,9 @@ public class RemainderMailMessageDao extends Dao
 			stmt.setString(4, message.getCreateDate());
 			stmt.execute();
 			success = false;
-		}
-		catch(SQLException e)
-		{
-			Log.put(Level.SEVERE, e);
-		}
-		finally
-		{
-			if(stmt != null)
-			{
-				try 
-				{
-					stmt.close();
-				} 
-				catch (SQLException e) 
-				{
-					Log.put(Level.SEVERE, e);
-				}
+		} finally {
+			if(stmt != null) {
+				stmt.close();
 			}
 		}
 		return success;

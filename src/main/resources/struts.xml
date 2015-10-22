@@ -13,14 +13,14 @@
 			<result>/index.jsp</result>
 		</action>-->
 		
-		<action name="registMailAddress" class="com.example.remaindermail.action.RegistMailAddress" method="regist">
+		<action name="registMailAddress" class="com.example.remaindermail.action.RegistMailAddressAction" method="regist">
 			<result name="success">/registMailAddress.jsp</result>
-			<result name="error">/registMailAddress.jsp</result>
+			<result name="error">/systemError.jsp</result>
 		</action>
 		
-		<action name="sendMail" class="com.example.remaindermail.action.SendMail" method="send">
+		<action name="sendMail" class="com.example.remaindermail.action.SendMailAction" method="send">
 			<result name="success">/sendMail.jsp</result>
-			<result name="error">/sendMail.jsp</result>
+			<result name="error">/systemError.jsp</result>
 		</action>
 		<!--  -->
 		 

@@ -16,10 +16,9 @@ public class Dao {
 	
 	/**
 	 * コンストラクタ
-	 * @param connection
+	 * @param connection コネクション
 	 */
-	public Dao(Connection connection)
-	{
+	public Dao(Connection connection) {
 		this.connection = connection;
 	}
 }

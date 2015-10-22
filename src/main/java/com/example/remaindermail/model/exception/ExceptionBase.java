@@ -5,18 +5,18 @@ package com.example.remaindermail.model.exception;
 
 import java.util.logging.Level;
 
-import com.example.remaindermail.model.Log;
+import com.example.remaindermail.model.LogWrapper;
 
 /**
  * 例外ベースクラス
  * @author toshikiarai
  * @version 1.0.0
  */
-public class ExceptionBase extends Exception 
-{
+public class ExceptionBase extends Exception {
+	
 	/**
 	 * コンストラクタ
-	 * @param message
+	 * @param message メッセージ
 	 */
 	public ExceptionBase(String message) 
 	{
@@ -25,8 +25,8 @@ public class ExceptionBase extends Exception
 	
 	/**
 	 * コンストラクタ
-	 * @param message
-	 * @param exception
+	 * @param message メッセージ
+	 * @param exception 例外
 	 */
 	public ExceptionBase(String message, Throwable exception)
 	{
@@ -38,11 +38,11 @@ public class ExceptionBase extends Exception
 	 */
 	public void put()
 	{
-		Log.put(Level.SEVERE, getMessage());
+		LogWrapper.put(Level.SEVERE, getMessage());
 		Throwable cause = getCause();
 		if(cause != null)
 		{
-			Log.put(Level.SEVERE, cause);
+			LogWrapper.put(Level.SEVERE, cause);
 		}
 	}
 }

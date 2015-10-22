@@ -5,8 +5,8 @@ package com.example.remaindermail.model.bean;
  * @author toshikiarai
  * @version 1.0.0
  */
-public class SendMailBean extends ViewBeanBase 
-{
+public class SendMailBean extends ViewBeanBase {
+	
 	/**
 	 * タイトル
 	 */
@@ -24,56 +24,50 @@ public class SendMailBean extends ViewBeanBase
 	private boolean isSend;
 
 	/**
-	 * タイトル取得
-	 * @return title
+	 * メールタイトル取得
+	 * @return title メールタイトル
 	 */
-	public String getTitle() 
-	{
+	public String getTitle() {
 		return title;
 	}
 
 	/**
-	 * タイトル設定
-	 * @param title
+	 * メールタイトル設定
+	 * @param title メールタイトル
 	 */
-	public void setTitle(String title) 
-	{
+	public void setTitle(String title) {
 		this.title = title;
 	}
 
 	/**
-	 * 本文取得
-	 * @return message
+	 * メール本文取得
+	 * @return message メール本文
 	 */
-	public String getMessage() 
-	{
+	public String getMessage() {
 		return message;
 	}
 
 	/**
-	 * 本文設定
-	 * @param message
+	 * メール本文設定
+	 * @param message メール本文
 	 */
-	public void setMessage(String message) 
-	{
+	public void setMessage(String message) {
 		this.message = message;
 	}
 
 	/**
 	 * 登録フラグ取得
-	 * @return isSend
+	 * @return isSend 登録したフラグ
 	 */
-	public boolean getIsSend() 
-	{
+	public boolean getIsSend() {
 		return isSend;
 	}
 
 	/**
 	 * 登録フラグ設定
-	 * @param isSend
+	 * @param isSend 登録したフラグ
 	 */
-	public void setIsSend(boolean isSend) 
-	{
+	public void setIsSend(boolean isSend) {
 		this.isSend = isSend;
 	}
 }

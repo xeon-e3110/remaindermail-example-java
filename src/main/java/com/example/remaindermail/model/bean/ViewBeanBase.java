@@ -7,8 +7,7 @@ import java.util.ArrayList;
  * @author toshikiarai
  * @version 1.0.0
  */
-public class ViewBeanBase 
-{
+public class ViewBeanBase {
 	
 	/**
 	 * エラーリスト
@@ -17,19 +16,17 @@ public class ViewBeanBase
 
 	/**
 	 * エラーリスト取得
-	 * @return errorList
+	 * @return errorList エラーメッセージリスト
 	 */
-	public ArrayList<String> getErrorList() 
-	{
+	public ArrayList<String> getErrorList() {
 		return errorList;
 	}
 
 	/**
 	 * エラーリストセット
-	 * @param errorList
+	 * @param errorList エラーメッセージリスト
 	 */
-	public void setErrorList(ArrayList<String> errorList) 
-	{
+	public void setErrorList(ArrayList<String> errorList) {
 		this.errorList = errorList;
 	}
 	

@@ -6,8 +6,7 @@ package com.example.remaindermail.model.bean;
  * @author toshikiarai
  * @version 1.0.0
  */
-public class RemainderMailMessageBean
-{
+public class RemainderMailMessageBean {
 	
 	/**
 	 * 通し番号
@@ -36,64 +35,57 @@ public class RemainderMailMessageBean
 
 	/**
 	 * 通し番号取得
-	 * @return id
+	 * @return id 通し番号
 	 */
-	public int getId()
-	{
+	public int getId() {
 		return id;
 	}
 	
 	/**
 	 * 通し番号設定
-	 * @param id
+	 * @param id 通し番号
 	 */
-	public void setId(int id)
-	{
+	public void setId(int id) {
 		this.id = id;
 	}
 	
 	/**
 	 * メールタイトル取得
-	 * @return title
+	 * @return title メールタイトル
 	 */
-	public String getTitle()
-	{
+	public String getTitle() {
 		return title;
 	}
 	
 	/**
 	 * メールタイトル設定
-	 * @param title
+	 * @param title メールタイトル
 	 */
-	public void setTitle(String title)
-	{
+	public void setTitle(String title) {
 		this.title = title;
 	}
 	
 	/**
 	 * メール本文取得
-	 * @return message
+	 * @return message メール本文
 	 */
-	public String getMessage()
-	{
+	public String getMessage() {
 		return message;
 	}
 	
 	/**
 	 * メール本文設定
-	 * @param message
+	 * @param message メール本文
 	 */
-	public void setMessage(String message)
-	{
+	public void setMessage(String message) {
 		this.message = message;
 	}
 	
 	/**
 	 * 作成日取得 ("yyyy-MM-dd hh:mm:ss":形式の文字列)
-	 * @return createDate
+	 * @return createDate 作成日
 	 */
-	public String getCreateDate()
-	{
+	public String getCreateDate() {
 		return createDate;
 	}
 
@@ -101,26 +93,23 @@ public class RemainderMailMessageBean
 	 * 作成日設定 ("yyyy-MM-dd hh:mm:ss":形式の文字列)
 	 * @param createDate 作成日
 	 */
-	public void setCreateDate(String createDate)
-	{
+	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
 	}
 	
 	/**
 	 * 送信フラグ取得 (0:未送信 1:送信済み)
-	 * @return send
+	 * @return send 送信したかどうか
 	 */
-	public int getSend()
-	{
+	public int getSend() {
 		return send;
 	}
 
 	/**
 	 * 送信フラグ設定 (0:未送信 1:送信済み)
-	 * @param send　
+	 * @param send 送信したかどうか
 	 */
-	public void setSend(int send)
-	{
+	public void setSend(int send) {
 		this.send = send;
 	}
 }

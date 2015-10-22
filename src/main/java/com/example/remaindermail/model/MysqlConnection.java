@@ -29,33 +29,24 @@ public class MysqlConnection {
 	/**
 	 * コネクションを取得または生成する
 	 * @return コネクション
-	 * @throws SQLException
+	 * @throws Exception 発生した例外
 	 */
-	public Connection openConnection() throws SQLException
-	{
-		if(connection == null)
-		{	
-			try {
-				DataSource dataSource = JNDI.lookup(jndiLookupName);
-				connection = dataSource.getConnection();
-				connection.setAutoCommit(false);
-			} catch (Exception e) {
-				Log.put(Level.SEVERE, e);
-			}
+	public Connection openConnection() throws Exception {
+		if(connection == null) {
+			DataSource dataSource = JNDIWrapper.lookup(jndiLookupName);
+			connection = dataSource.getConnection();
+			connection.setAutoCommit(false);
 		}
 		return connection;
 	}
 	
 	/**
 	 * コネクションを閉じる
-	 * @throws SQLException
+	 * @throws Exception 発生した例外
 	 */
-	public void closeConnection() throws SQLException
-	{
-		if(connection != null)
-		{
-			if(connection.isClosed() == false)
-			{
+	public void closeConnection() throws Exception {
+		if(connection != null) {
+			if(connection.isClosed() == false) {
 				connection.close();
 			}
 			connection = null;
