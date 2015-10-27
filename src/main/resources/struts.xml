@@ -22,6 +22,11 @@
 			<result name="success">/sendMail.jsp</result>
 			<result name="error">/systemError.jsp</result>
 		</action>
+		
+		<action name="resendMail" class="com.example.remaindermail.action.SendMailAction" method="resend">
+			<result name="success">/sendMail.jsp</result>
+			<result name="error">/systemError.jsp</result>
+		</action>
 		<!--  -->
 		 
 	</package>

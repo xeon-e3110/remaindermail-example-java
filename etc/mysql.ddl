@@ -5,6 +5,7 @@ USE `remaindermail`;
 CREATE TABLE IF NOT EXISTS `remainder_mail_address_t` (
 	`id` INT(10) UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '管理番号',
 	`mailAddress` VARCHAR(256) NOT NULL COMMENT 'メールアドレス',
+	`messageID` INT(10) NOT NULL DEFAULT '0' COMMENT '送信済みメッセージID',
 	`updateDate` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新日',
 	`createDate` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '作成日',
 	`deleteFlg` TINYINT(3) NOT NULL DEFAULT '0' COMMENT '論理削除フラグ',

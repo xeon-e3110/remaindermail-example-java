@@ -16,12 +16,16 @@ public class SendMailBean extends ViewBeanBase {
 	 * 本文
 	 */
 	private String message;
-
 	
 	/**
 	 * 送信フラグ
 	 */
 	private boolean isSend;
+	
+	/**
+	 * 再送フラグ
+	 */
+	private boolean isResend;
 
 	/**
 	 * メールタイトル取得
@@ -69,5 +73,21 @@ public class SendMailBean extends ViewBeanBase {
 	 */
 	public void setIsSend(boolean isSend) {
 		this.isSend = isSend;
+	}
+
+	/**
+	 * 再送フラグ取得
+	 * @return isResend
+	 */
+	public boolean getIsResend() {
+		return isResend;
+	}
+
+	/**
+	 * 再送フラグ設定
+	 * @param isResend
+	 */
+	public void setIsResend(boolean isResend) {
+		this.isResend = isResend;
 	}
 }

@@ -21,5 +21,15 @@
 	<s:submit value="送信"></s:submit>
 </s:form>
 
+
+<s:if test="%{sendMail.isResend}">
+一部のアドレスにメールが送れませんでした<br>
+送れなかったメールアドレスに再送信する
+<s:form action="resendMail">
+	<s:hidden name="sendMail.isResend" value="true"></s:hidden>
+	<s:submit value="再送信"></s:submit>
+</s:form>
+</s:if>
+
 </body>
 </html>

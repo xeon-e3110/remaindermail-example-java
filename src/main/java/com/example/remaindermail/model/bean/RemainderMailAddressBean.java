@@ -14,6 +14,11 @@ public class RemainderMailAddressBean {
 	private String mailAddress;
 	
 	/**
+	 * メッセージID
+	 */
+	private int messageID;
+	
+	/**
 	 * 登録日 ("yyyy-MM-dd hh:mm:ss":形式の文字列)
 	 */
 	private String createDate;
@@ -44,6 +49,22 @@ public class RemainderMailAddressBean {
 		this.mailAddress = mailAddress;
 	}
 	
+	/**
+	 * メッセージID取得
+	 * @return messageID メッセージID
+	 */
+	public int getMessageID() {
+		return messageID;
+	}
+
+	/**
+	 * メッセージID設定
+	 * @param messageID メッセージID
+	 */
+	public void setMessageID(int messageID) {
+		this.messageID = messageID;
+	}
+
 	/**
 	 * 作成日取得 ("yyyy-MM-dd hh:mm:ss":形式の文字列)
 	 * @return createDate 作成日

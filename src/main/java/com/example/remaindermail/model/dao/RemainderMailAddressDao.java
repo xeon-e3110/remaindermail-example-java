@@ -94,25 +94,52 @@ public class RemainderMailAddressDao extends Dao {
 	}
 	
 	/**
+	 * メッセージIDを更新する
+	 * @param address 対象メールアドレス
+	 * @param messageID 更新するメッセージID
+	 * @throws Exception
+	 */
+	public void updateMessageID(String address, int messageID) throws Exception {
+		String sql = "UPDATE `" + tableName + "` SET `messageID` = ?, `updateDate` = ? WHERE `mailAddress` = ?";
+		PreparedStatement stmt = null;
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		String dateStr = sdf.format(date);
+		try {
+			stmt = connection.prepareStatement(sql);
+			stmt.setInt(1, messageID);
+			stmt.setString(2, dateStr);
+			stmt.setString(3, address);
+			stmt.execute();
+		} finally {
+			if(stmt != null) {
+				stmt.close();
+			}
+		}
+	}
+	
+	/**
 	 * 登録されているリマインダーメールリストを取得する
 	 * @return 登録されているメールアドレスのリスト
 	 * @throws Exception
 	 */
-	public ArrayList<RemainderMailAddressBean> getAddressList() throws Exception {
+	public ArrayList<RemainderMailAddressBean> getAddressList(int messageID) throws Exception {
 		ArrayList<RemainderMailAddressBean> list = new ArrayList<RemainderMailAddressBean>();
 		String sql = "SELECT "
-				+ "`id`, `mailAddress`, `updateDate`, `createDate`, `deleteFlg`"
-				+ " FROM " + tableName + " WHERE `deleteFlg` = 0";
+				+ "`id`, `mailAddress`, `messageID`, `updateDate`, `createDate`, `deleteFlg`"
+				+ " FROM " + tableName + " WHERE `messageID` < ? AND `deleteFlg` = 0";
 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
 		try {
 			stmt = connection.prepareStatement(sql);
+			stmt.setInt(1, messageID);
 			rs = stmt.executeQuery();
 			while(rs.next()) {
 				RemainderMailAddressBean bean = new RemainderMailAddressBean();
 				bean.setMailAddress(rs.getString("mailAddress"));
+				bean.setMessageID(rs.getInt("messageID"));
 				bean.setUpdateDate(rs.getString("updateDate"));
 				bean.setCreateDate(rs.getString("createDate"));
 				bean.setDelete(rs.getInt("deleteFlg"));

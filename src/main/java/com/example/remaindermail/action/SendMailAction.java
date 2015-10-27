@@ -64,7 +64,7 @@ public class SendMailAction extends ActionSupport {
 		}
 		
 		if(sendMail.getErrorList().isEmpty() == false) {
-			return ERROR;
+			return SUCCESS;
 		}
 		
 		MysqlConnection mysqlConnection = null;
@@ -76,42 +76,7 @@ public class SendMailAction extends ActionSupport {
 			mysqlConnection = new MysqlConnection();
 			connection = mysqlConnection.openConnection();
 			
-			// 送信先をまとめる
-			RemainderMailAddressDao addressDao = new RemainderMailAddressDao(connection);
-			ArrayList<RemainderMailAddressBean> addressList = addressDao.getAddressList();
-			ArrayList<String> inetAddressList = new ArrayList<String>();
-			for(RemainderMailAddressBean bean:addressList) {
-				inetAddressList.add(bean.getMailAddress());
-			}
-			
-			if(inetAddressList.isEmpty()) {
-				sendMail.getErrorList().add("宛先が一件もありません");
-				return SUCCESS;
-			}
-			
-			// それぞれにメールを送る
-			ArrayList<String> faildSendAddressList = new ArrayList<String>();
-			for(String address: inetAddressList) {
-				try {
-					MailWrapper.send(address, sendMail.getTitle(), sendMail.getMessage());	
-				} catch (Exception e) {
-					LogWrapper.put(Level.SEVERE, e);
-					faildSendAddressList.add(address);
-				}
-			}
-			
-			// メールを送れなかった人の一覧を表示
-			if(faildSendAddressList.isEmpty() == false)
-			{
-				String msg = "一部のアドレスにメールが送れませんでした<br>";
-				for(String address:faildSendAddressList)
-				{
-					msg += (address + "<br>");
-				}
-				sendMail.getErrorList().add(msg);
-			}
-			
-			//履歴に登録
+			// 履歴に登録
 			Date date = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			RemainderMailMessageBean bean = new RemainderMailMessageBean();
@@ -121,7 +86,34 @@ public class SendMailAction extends ActionSupport {
 			bean.setSend(1);
 			
 			RemainderMailMessageDao messageDao = new RemainderMailMessageDao(connection);
-			messageDao.registMessage(bean);
+			bean = messageDao.registMessage(bean);
+			
+			// 送信先をまとめる
+			RemainderMailAddressDao addressDao = new RemainderMailAddressDao(connection);
+			ArrayList<RemainderMailAddressBean> addressList = addressDao.getAddressList(bean.getId());
+			ArrayList<String> inetAddressList = new ArrayList<String>();
+			for(RemainderMailAddressBean rmaBean:addressList) {
+				inetAddressList.add(rmaBean.getMailAddress());
+			}
+			
+			if(inetAddressList.isEmpty()) {
+				sendMail.getErrorList().add("宛先が一件もありません");
+				connection.rollback();
+				return SUCCESS;
+			}
+			
+			
+			// それぞれにメールを送る
+			ArrayList<String> faildSendAddressList = new ArrayList<String>();
+			for(String address: inetAddressList) {
+				try {
+					MailWrapper.send(address, bean.getTitle(), bean.getMessage());
+					addressDao.updateMessageID(address, bean.getId());
+				} catch (Exception e) {
+					LogWrapper.put(Level.SEVERE, e);
+					faildSendAddressList.add(address);
+				}
+			}
 			
 			// 送信済み状態にする
 			sendMail.setIsSend(true);
@@ -129,6 +121,18 @@ public class SendMailAction extends ActionSupport {
 			// 入力をクリア
 			sendMail.setTitle("");
 			sendMail.setMessage("");
+			
+			// メールを送れなかった人の一覧を表示
+			if(faildSendAddressList.isEmpty() == false)
+			{
+				sendMail.getErrorList().add("一部のアドレスにメールが送れませんでした");
+				for(String address:faildSendAddressList)
+				{
+					sendMail.getErrorList().add("    " + address);
+				}
+				
+				sendMail.setIsResend(true);
+			}
 
 			// DBコミット
 			connection.commit();
@@ -155,6 +159,94 @@ public class SendMailAction extends ActionSupport {
 			}
 		}
 		
+		return SUCCESS;
+	}
+	
+	public String resend()
+	{
+		// 初回アクセス時
+		if(sendMail == null) {
+			return send();
+		}
+		
+		MysqlConnection mysqlConnection = null;
+		Connection connection = null;
+		
+		try {
+			
+			// Mysqlコネクションを開く
+			mysqlConnection = new MysqlConnection();
+			connection = mysqlConnection.openConnection();
+			
+			// 最後に登録されたメッセージの取得
+			RemainderMailMessageDao messageDao = new RemainderMailMessageDao(connection);
+			RemainderMailMessageBean latestMessage = messageDao.getLatestMessage();
+			
+			// 送信先をまとめる
+			RemainderMailAddressDao addressDao = new RemainderMailAddressDao(connection);
+			ArrayList<RemainderMailAddressBean> addressList = addressDao.getAddressList(latestMessage.getId());
+			ArrayList<String> inetAddressList = new ArrayList<String>();
+			for(RemainderMailAddressBean bean:addressList) {
+				inetAddressList.add(bean.getMailAddress());
+			}
+			
+			if(inetAddressList.isEmpty()) {
+				sendMail.getErrorList().add("宛先が一件もありません");
+				connection.rollback();
+				return SUCCESS;
+			}
+
+			
+			// それぞれにメールを送る
+			ArrayList<String> faildSendAddressList = new ArrayList<String>();
+			for(String address: inetAddressList) {
+				try {
+					MailWrapper.send(address, latestMessage.getTitle(), latestMessage.getMessage());
+					addressDao.updateMessageID(address, latestMessage.getId());
+				} catch (Exception e) {
+					LogWrapper.put(Level.SEVERE, e);
+					faildSendAddressList.add(address);
+				}
+			}
+			
+			// 送信済み状態にする
+			sendMail.setIsSend(true);
+			
+			// 入力をクリア
+			sendMail.setTitle("");
+			sendMail.setMessage("");
+			sendMail.setIsResend(false);
+			
+			// 送れなかった人がいたら再送処理を表示する
+			if(faildSendAddressList.isEmpty() == false)
+			{
+				sendMail.setIsResend(true);
+			}
+
+			// DBコミット
+			connection.commit();
+			
+		}
+		catch(Exception e) {
+			LogWrapper.put(Level.SEVERE, e);
+			sendMail.getErrorList().add("エラーが発生しました");
+			if(connection != null) {
+				try {
+					connection.rollback();
+				} catch (Exception exception1) {
+					LogWrapper.put(Level.SEVERE, exception1);
+				}	
+			}
+			return ERROR;
+		} finally {
+			if(mysqlConnection != null) {
+				try {
+					mysqlConnection.closeConnection();
+				} catch (Exception e) {
+					LogWrapper.put(Level.SEVERE, e);
+				}
+			}
+		}
 		return SUCCESS;
 	}
 
