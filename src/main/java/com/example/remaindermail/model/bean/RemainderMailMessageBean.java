@@ -112,4 +112,5 @@ public class RemainderMailMessageBean {
 	public void setSend(int send) {
 		this.send = send;
 	}
+	
 }

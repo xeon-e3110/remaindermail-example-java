@@ -3,13 +3,10 @@ package com.example.remaindermail.model.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
 
-import com.example.remaindermail.model.LogWrapper;
 import com.example.remaindermail.model.bean.RemainderMailAddressBean;
 
 /**
@@ -36,6 +33,7 @@ public class RemainderMailAddressDao extends Dao {
 	 * メールアドレスの登録チェック
 	 * @param address 検索するメールアドレス
 	 * @return boolean メールアドレスが登録されているかどうか (true:登録済み false:未登録)
+	 * @throws Exception 発生した例外
 	 */
 	public boolean isRegistedAddress(String address) throws Exception {
 		String sql = "SELECT `mailAddress` FROM `" + tableName + "` WHERE `mailAddress` = ? AND `deleteFlg` = 0";
@@ -68,6 +66,7 @@ public class RemainderMailAddressDao extends Dao {
 	 * メールアドレス登録
 	 * @param address
 	 * @return 登録が成功したかどうか (true:登録成功 false:登録失敗)
+	 * @throws Exception 発生した例外
 	 */
 	public void registAddress(String address) throws Exception {
 		Date date = new Date();
@@ -97,7 +96,7 @@ public class RemainderMailAddressDao extends Dao {
 	 * メッセージIDを更新する
 	 * @param address 対象メールアドレス
 	 * @param messageID 更新するメッセージID
-	 * @throws Exception
+	 * @throws Exception 発生した例外
 	 */
 	public void updateMessageID(String address, int messageID) throws Exception {
 		String sql = "UPDATE `" + tableName + "` SET `messageID` = ?, `updateDate` = ? WHERE `mailAddress` = ?";
@@ -121,7 +120,7 @@ public class RemainderMailAddressDao extends Dao {
 	/**
 	 * 登録されているリマインダーメールリストを取得する
 	 * @return 登録されているメールアドレスのリスト
-	 * @throws Exception
+	 * @throws Exception 発生した例外
 	 */
 	public ArrayList<RemainderMailAddressBean> getAddressList(int messageID) throws Exception {
 		ArrayList<RemainderMailAddressBean> list = new ArrayList<RemainderMailAddressBean>();

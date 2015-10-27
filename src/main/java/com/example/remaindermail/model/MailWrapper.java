@@ -1,9 +1,5 @@
 package com.example.remaindermail.model;
 
-import java.util.List;
-import java.util.Vector;
-import java.util.logging.Level;
-
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;

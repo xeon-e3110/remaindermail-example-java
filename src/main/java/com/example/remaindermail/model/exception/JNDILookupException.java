@@ -6,6 +6,7 @@ package com.example.remaindermail.model.exception;
 /**
  * JDNIルックアップ例外
  * @author toshikiarai
+ * @version 1.0.0
  */
 public class JNDILookupException extends ExceptionBase {
 	
@@ -27,4 +28,5 @@ public class JNDILookupException extends ExceptionBase {
 	{
 		super(message, exception);
 	}
+	
 }

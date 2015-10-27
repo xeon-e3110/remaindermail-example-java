@@ -136,4 +136,5 @@ public class RegistMailAddressAction extends ActionSupport {
 			}
 		}
 	}
+	
 }

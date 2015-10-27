@@ -3,7 +3,6 @@ package com.example.remaindermail.model.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import com.example.remaindermail.model.bean.RemainderMailMessageBean;
 import com.example.remaindermail.model.exception.DaoException;
@@ -31,9 +30,9 @@ public class RemainderMailMessageDao extends Dao {
 	
 	/**
 	 * メッセージを登録
-	 * @param message
+	 * @param message メッセージ
 	 * @return メッセージ登録が成功したかどうか (true:成功 false:失敗)
-	 * @throws Exception
+	 * @throws Exception 発生した例外
 	 */
 	public RemainderMailMessageBean registMessage(RemainderMailMessageBean message) throws Exception {
 		String sql = "INSERT INTO `" + tableName + "` ("
@@ -76,7 +75,7 @@ public class RemainderMailMessageDao extends Dao {
 	/**
 	 * 最後に登録したメッセージを取得する
 	 * @return 最後に登録されたメッセージ
-	 * @throws Exception
+	 * @throws Exception 発生した例外
 	 */
 	public RemainderMailMessageBean getLatestMessage() throws Exception {
 		String sql = "SELECT `id`, `title`, `message`, `send`, `createDate`, `deleteFlg` FROM `" + tableName + "` WHERE `deleteFlg` = 0 ORDER BY `id` DESC LIMIT 1";

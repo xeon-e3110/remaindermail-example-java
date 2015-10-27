@@ -90,4 +90,5 @@ public class SendMailBean extends ViewBeanBase {
 	public void setIsResend(boolean isResend) {
 		this.isResend = isResend;
 	}
+	
 }

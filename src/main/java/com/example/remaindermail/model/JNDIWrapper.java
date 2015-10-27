@@ -1,7 +1,6 @@
 package com.example.remaindermail.model;
 
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
 import com.example.remaindermail.model.exception.JNDILookupException;
 

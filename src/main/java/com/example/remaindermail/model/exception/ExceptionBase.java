@@ -45,4 +45,5 @@ public class ExceptionBase extends Exception {
 			LogWrapper.put(Level.SEVERE, cause);
 		}
 	}
+	
 }

@@ -5,7 +5,7 @@ import java.sql.Connection;
 /**
  * MysqlDAO
  * @author toshikiarai
- *
+ * @version 1.0.0
  */
 public class Dao {
 
@@ -21,4 +21,5 @@ public class Dao {
 	public Dao(Connection connection) {
 		this.connection = connection;
 	}
+	
 }

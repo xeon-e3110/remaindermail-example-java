@@ -121,16 +121,9 @@ public class SendMailAction extends ActionSupport {
 			// 入力をクリア
 			sendMail.setTitle("");
 			sendMail.setMessage("");
-			
-			// メールを送れなかった人の一覧を表示
-			if(faildSendAddressList.isEmpty() == false)
-			{
-				sendMail.getErrorList().add("一部のアドレスにメールが送れませんでした");
-				for(String address:faildSendAddressList)
-				{
-					sendMail.getErrorList().add("    " + address);
-				}
-				
+
+			// 送れなかった人がいたら再送処理を表示する
+			if(faildSendAddressList.isEmpty() == false) {
 				sendMail.setIsResend(true);
 			}
 
@@ -162,8 +155,11 @@ public class SendMailAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
-	public String resend()
-	{
+	/**
+	 * メール再送
+	 * @return String 実行結果
+	 */
+	public String resend() {
 		// 初回アクセス時
 		if(sendMail == null) {
 			return send();
@@ -218,23 +214,21 @@ public class SendMailAction extends ActionSupport {
 			sendMail.setIsResend(false);
 			
 			// 送れなかった人がいたら再送処理を表示する
-			if(faildSendAddressList.isEmpty() == false)
-			{
+			if(faildSendAddressList.isEmpty() == false) {
 				sendMail.setIsResend(true);
 			}
 
 			// DBコミット
 			connection.commit();
 			
-		}
-		catch(Exception e) {
+		} catch(Exception e) {
 			LogWrapper.put(Level.SEVERE, e);
 			sendMail.getErrorList().add("エラーが発生しました");
 			if(connection != null) {
 				try {
 					connection.rollback();
-				} catch (Exception exception1) {
-					LogWrapper.put(Level.SEVERE, exception1);
+				} catch (Exception connectionException) {
+					LogWrapper.put(Level.SEVERE, connectionException);
 				}	
 			}
 			return ERROR;
