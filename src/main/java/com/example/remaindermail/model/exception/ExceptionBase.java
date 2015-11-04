@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.example.remaindermail.model.exception;
 
 import java.util.logging.Level;

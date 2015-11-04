@@ -64,7 +64,7 @@ public class RemainderMailAddressDao extends Dao {
 	
 	/**
 	 * メールアドレス登録
-	 * @param address
+	 * @param address 登録するメールアドレス
 	 * @return 登録が成功したかどうか (true:登録成功 false:登録失敗)
 	 * @throws Exception 発生した例外
 	 */
@@ -109,7 +109,7 @@ public class RemainderMailAddressDao extends Dao {
 			stmt.setInt(1, messageID);
 			stmt.setString(2, dateStr);
 			stmt.setString(3, address);
-			stmt.execute();
+			stmt.executeUpdate();
 		} finally {
 			if(stmt != null) {
 				stmt.close();
@@ -119,6 +119,7 @@ public class RemainderMailAddressDao extends Dao {
 	
 	/**
 	 * 登録されているリマインダーメールリストを取得する
+	 * @param 指定のメッセージID
 	 * @return 登録されているメールアドレスのリスト
 	 * @throws Exception 発生した例外
 	 */

@@ -3,6 +3,8 @@ package com.example.remaindermail.model.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.example.remaindermail.model.bean.RemainderMailMessageBean;
 import com.example.remaindermail.model.exception.DaoException;
@@ -31,7 +33,7 @@ public class RemainderMailMessageDao extends Dao {
 	/**
 	 * メッセージを登録
 	 * @param message メッセージ
-	 * @return メッセージ登録が成功したかどうか (true:成功 false:失敗)
+	 * @return 登録したメッセージ情報
 	 * @throws Exception 発生した例外
 	 */
 	public RemainderMailMessageBean registMessage(RemainderMailMessageBean message) throws Exception {
@@ -92,7 +94,7 @@ public class RemainderMailMessageDao extends Dao {
 				bean.setCreateDate(rs.getString("createDate"));
 				bean.setSend(rs.getInt("send"));
 			} else {
-				throw new DaoException("データの取得に失敗しました");
+				return null;
 			}
 			return bean;
 		} finally {
@@ -105,6 +107,65 @@ public class RemainderMailMessageDao extends Dao {
 					}
 				}
 			} else if(stmt != null) {
+				stmt.close();
+			}
+		}
+	}
+	
+	/**
+	 * 登録されているメッセージリストを取得する
+	 * @return メッセージリスト
+	 * @throws Exception 発生した例外
+	 */
+	public List<RemainderMailMessageBean> getNotSendMessageList() throws Exception {
+		String sql = "SELECT `id`, `title`, `message`, `send`, `createDate`, `deleteFlg` FROM `" + tableName + "` WHERE `deleteFlg` = 0 AND `send` = 0 ORDER BY `id`";
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		ArrayList<RemainderMailMessageBean> beanList = new ArrayList<RemainderMailMessageBean>();
+		try {
+			stmt = connection.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			// リストのサイズをあらかじめ拡張しておく
+			beanList.ensureCapacity(rs.getFetchSize());
+			while(rs.next()) {
+				RemainderMailMessageBean bean = new RemainderMailMessageBean();
+				bean.setId(rs.getInt("id"));
+				bean.setTitle(rs.getString("title"));
+				bean.setMessage(rs.getString("message"));
+				bean.setSend(rs.getInt("send"));
+				bean.setCreateDate(rs.getString("createDate"));
+				beanList.add(bean);
+			}
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();	
+				} finally {
+					if(stmt != null) {
+						stmt.close();
+					}
+				}
+			} else if(stmt != null) {
+				stmt.close();
+			}
+		}
+		return beanList;
+	}
+	
+	/**
+	 * メールを送信済み状態にする
+	 * @param messageID 送信済み状態にするメッセージID
+	 * @throws Exception 発生した例外
+	 */
+	public void setSend(int messageID) throws Exception {
+		String sql = "UPDATE `" + tableName + "` SET `send` = 1 WHERE `deleteFlg` = 0 AND `id` = ?";
+		PreparedStatement stmt = null;
+		try {
+			stmt = connection.prepareStatement(sql);
+			stmt.setInt(1, messageID);
+			stmt.executeUpdate();
+		} finally {
+			if(stmt != null) {
 				stmt.close();
 			}
 		}

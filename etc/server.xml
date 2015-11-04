@@ -136,7 +136,7 @@
 		 maxWait="100"
 		 username="root"
 		 password="root"
-		 url="jdbc:mysql://localhost:8889/remaindermail"
+		 url="jdbc:mysql://localhost:8889/remaindermail?useUnicode=true&amp;characterEncoding=UTF-8"
 		 driverClassName="com.mysql.jdbc.Driver"/>
       	
       	<Resource 

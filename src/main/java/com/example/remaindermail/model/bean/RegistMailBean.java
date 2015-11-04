@@ -5,7 +5,7 @@ package com.example.remaindermail.model.bean;
  * @author toshikiarai
  * @version 1.0.0
  */
-public class SendMailBean extends ViewBeanBase {
+public class RegistMailBean extends ViewBeanBase {
 	
 	/**
 	 * タイトル
@@ -20,12 +20,7 @@ public class SendMailBean extends ViewBeanBase {
 	/**
 	 * 送信フラグ
 	 */
-	private boolean isSend;
-	
-	/**
-	 * 再送フラグ
-	 */
-	private boolean isResend;
+	private boolean isRegist;
 
 	/**
 	 * メールタイトル取得
@@ -63,32 +58,16 @@ public class SendMailBean extends ViewBeanBase {
 	 * 登録フラグ取得
 	 * @return isSend 登録したフラグ
 	 */
-	public boolean getIsSend() {
-		return isSend;
+	public boolean getIsRegist() {
+		return isRegist;
 	}
 
 	/**
 	 * 登録フラグ設定
-	 * @param isSend 登録したフラグ
+	 * @param isRegist 登録したフラグ
 	 */
-	public void setIsSend(boolean isSend) {
-		this.isSend = isSend;
-	}
-
-	/**
-	 * 再送フラグ取得
-	 * @return isResend
-	 */
-	public boolean getIsResend() {
-		return isResend;
-	}
-
-	/**
-	 * 再送フラグ設定
-	 * @param isResend
-	 */
-	public void setIsResend(boolean isResend) {
-		this.isResend = isResend;
+	public void setIsRegist(boolean isRegist) {
+		this.isRegist = isRegist;
 	}
 	
 }
